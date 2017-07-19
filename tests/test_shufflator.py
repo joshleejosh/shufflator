@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# TODO: Make Python 2/3-compatible unit tests?
-
-import os, random, unittest, tempfile, json, codecs
+import sys, os, unittest, tempfile, json, codecs
 import shufflator
 
 class ShufflerTest(unittest.TestCase):
@@ -37,14 +35,18 @@ class ShufflerTest(unittest.TestCase):
 
         # exhaust the shuffle set.
         # make sure nothing gets repeated along the way.
-        for i in xrange(299):
+        for i in range(299):
             v = s.choice('test', self.data1)
             self.assertGreater(v, -1)
             self.assertLess(v, 300)
             self.assertNotIn(v, buf)
             buf.append(v)
         self.assertEqual(len(s.state['test']), 0)
-        self.assertEqual(sorted(buf), self.data1)
+        # grrr
+        if sys.version_info >= (3, 0, 0):
+            self.assertCountEqual(buf, self.data1)
+        else:
+            self.assertItemsEqual(buf, self.data1)
 
         # the next request triggers a reshuffle.
         v = s.choice('test', self.data1)
@@ -87,7 +89,8 @@ class ShufflerTest(unittest.TestCase):
             self.assertEqual(len(j['bar']), len(set(j['bar'])))
             self.assertEqual(j['bar'], s.state['bar'])
 
-        # reload the file into a new Shuffler instance. All the data should be the same.
+        # reload the file into a new Shuffler instance.
+        # All the data should be the same.
         t = shufflator.Shufflator()
         t.load(self.tfn)
         self.assertEqual(len(s.state), len(t.state))
@@ -95,10 +98,10 @@ class ShufflerTest(unittest.TestCase):
         self.assertEqual(s.state['bar'], t.state['bar'])
 
         # exhaust the shuffler and make sure it saves correctly.
-        for i in xrange(299):
+        for i in range(299):
             v = t.choice('foo', self.data1)
         self.assertEqual(len(t.state['foo']), 0)
-        for i in xrange(54):
+        for i in range(54):
             v = t.choice('bar', self.data2)
         self.assertEqual(len(t.state['bar']), 0)
 
@@ -129,5 +132,5 @@ class ShufflerTest(unittest.TestCase):
             self.assertEqual(j[k1], t.state[k1])
             self.assertEqual(j[k2], t.state[k2])
 
-    # TODO: test failure cases when the base dataset is forcefully resized and goes out of sync with the shuffler.
+    # TODO: test failure cases when the base dataset is resized and goes out of sync with the shuffler.
 
