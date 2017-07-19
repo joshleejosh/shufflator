@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import sys, os, unittest, tempfile, json, codecs
-import shufflator
+import shufflebuddy
 
 class ShufflerTest(unittest.TestCase):
     def setUp(self):
@@ -21,7 +21,7 @@ class ShufflerTest(unittest.TestCase):
 
     def test_nofile(self):
         # a new shuffler is empty.
-        s = shufflator.Shufflator()
+        s = shufflebuddy.ShuffleBuddy()
         self.assertEqual(len(s.state), 0)
         buf = []
 
@@ -60,7 +60,7 @@ class ShufflerTest(unittest.TestCase):
         s.save()
 
     def test_badfile(self):
-        s = shufflator.Shufflator()
+        s = shufflebuddy.ShuffleBuddy()
         v = s.choice('test', self.data2)
         ostate = s.state['test']
         s.load(None) # should safely nop and not touch anything.
@@ -70,7 +70,7 @@ class ShufflerTest(unittest.TestCase):
         # load an empty shuffler
         with os.fdopen(self.tfd, 'w') as fp:
             fp.write('{}')
-        s = shufflator.Shufflator()
+        s = shufflebuddy.ShuffleBuddy()
         s.load(self.tfn)
 
         # prime it and save it
@@ -91,7 +91,7 @@ class ShufflerTest(unittest.TestCase):
 
         # reload the file into a new Shuffler instance.
         # All the data should be the same.
-        t = shufflator.Shufflator()
+        t = shufflebuddy.ShuffleBuddy()
         t.load(self.tfn)
         self.assertEqual(len(s.state), len(t.state))
         self.assertEqual(s.state['foo'], t.state['foo'])
@@ -115,12 +115,12 @@ class ShufflerTest(unittest.TestCase):
     def test_unicode(self):
         k1 = u'fÖø💩'
         k2 = u'𐐔𐐯𐑅𐐨𐑉𐐯𐐻'
-        s = shufflator.Shufflator()
+        s = shufflebuddy.ShuffleBuddy()
         v = s.choice(k1, self.data1)
         w = s.choice(k2, self.data2)
         s.save(self.tfn)
 
-        t = shufflator.Shufflator()
+        t = shufflebuddy.ShuffleBuddy()
         t.load(self.tfn)
         self.assertEqual(len(s.state), len(t.state))
         self.assertEqual(s.state[k1], t.state[k1])

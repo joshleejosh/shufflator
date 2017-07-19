@@ -1,2 +1,1 @@
-Persist shuffled sequences across runs of a program.
-
+Maintain and persist shuffled sequences.

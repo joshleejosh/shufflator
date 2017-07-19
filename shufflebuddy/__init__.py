@@ -8,7 +8,7 @@ import json
 import random
 import codecs
 
-class Shufflator:
+class ShuffleBuddy:
     def __init__(self):
         self.filename = ''
         self.state = {}

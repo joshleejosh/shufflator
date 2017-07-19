@@ -9,16 +9,16 @@ with open('LICENSE') as f:
     license = f.read()
 
 setup(
-    name='shufflator',
-    version='0.1.0',
-    description='Persist shuffled sequences across runs of a program',
+    name='shufflebuddy',
+    version='0.0.1',
+    description='Maintain and persist shuffled sequences',
     long_description=readme,
     author='Floor Is Lava',
     author_email='lava@floor.is',
-    url='https://github.com/joshleejosh/shufflator',
+    url='https://github.com/joshleejosh/shufflebuddy',
     license=license,
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
