@@ -2,11 +2,11 @@
 """
 Persist shuffled sequences across runs of a program.
 """
-
+from __future__ import unicode_literals
+from builtins import open
 import os.path
 import json
 import random
-import codecs
 
 class ShuffleBuddy:
     def __init__(self):
@@ -20,7 +20,7 @@ class ShuffleBuddy:
             return
         if not os.path.exists(self.filename):
             return
-        with codecs.open(self.filename, encoding='utf-8') as fp:
+        with open(self.filename, encoding='utf-8') as fp:
             self.state = json.load(fp)
 
     def save(self, fn=None):
@@ -28,8 +28,8 @@ class ShuffleBuddy:
             self.filename = fn
         if not self.filename:
             return
-        with codecs.open(self.filename, 'w', encoding='utf-8') as fp:
-            s = json.dumps(self.state, fp, ensure_ascii=False)
+        with open(self.filename, 'w', encoding='utf-8') as fp:
+            s = json.dumps(self.state, ensure_ascii=False)
             # faux-readability
             s = s.replace('{', '{\n')
             s = s.replace('}', '\n}')
@@ -48,7 +48,7 @@ class ShuffleBuddy:
         if k in self.state and len(self.state[k]) > 0:
             v = self.state[k].pop(0)
 
-        rv = u''
+        rv = ''
         if v > -1:
             if v < len(a):
                 rv = a[v]
